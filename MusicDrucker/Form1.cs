@@ -189,7 +189,7 @@ namespace MusicDrucker
         }
 
 
-        private Regex multiLine = new Regex(@"(?<user>[a-zA-Z-\\]+):\s+(?<status>[a-z0-9]+)\s+\[(?<details>[a-z0-9\.\s-]+)\]\s+(?<title>[\x20-\x7e]+)\.?.*\s+(?<size>\d+) bytes", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        private Regex multiLine = new Regex(@"(?<user>[a-zA-Z-\\]+):\s+(?<status>[a-z0-9]+)\s+\[job\s+(?<jobid>[0-9]+)(?<details>[a-z0-9\.\s-]+)\]\s+(?<title>[\x20-\x7e]+)\.?.*\s+(?<size>\d+) bytes", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
         private Boolean parseLpq()
         {
@@ -216,26 +216,17 @@ namespace MusicDrucker
                 Jobs = new List<ListViewItem>();
                 foreach (Match m in matches)
                 {
-                    String user = String.Empty;
-                    String status = String.Empty;
-                    String details = String.Empty;
-                    String title = String.Empty;
-                    String size = String.Empty;
+                    String user = m.Result("${user}").Trim();
+                    String status = m.Result("${status}").Trim();
+                    String jobid = m.Result("${jobid}").Trim();
+                    String details = m.Result("${details}").Trim();
+                    String title = m.Result("${title}").Trim();
+                    String size = m.Result("${size}").Trim();
 
-                    user = m.Result("${user}").Trim();
-                    status = m.Result("${status}").Trim();
-                    details = m.Result("${details}").Trim();
-                    title = m.Result("${title}").Trim();
-                    size = m.Result("${size}").Trim();
-
-                    //
                     ListViewItem item = new ListViewItem();
-                    item.Tag = this;
-                    item.Text = String.Format("{0,-8} {1} {2}", status, user, title);
-                    ListViewItem.ListViewSubItem subItem = new ListViewItem.ListViewSubItem(item, "Title");
-                    subItem.Name = "Title";
-                    subItem.Text = title;
-                    item.SubItems.Add(subItem);
+                    item.Tag = jobid;
+                    item.Text = String.Format("{0,-8} {1,-15} {2}", status, user, title);
+
                     item.ImageIndex = 0;
                     Jobs.Add(item);
 
@@ -257,11 +248,21 @@ namespace MusicDrucker
                 selectedLbl.Text = "Selected:";
                 return;
             }
-            selectedLbl.Text = "Selected: " + this.listView1.SelectedItems[0].Text;
+            selectedLbl.Text = "Selected: " + this.listView1.SelectedItems[0].Text + " (" + this.listView1.SelectedItems[0].Tag + ")";
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (this.listView1.SelectedItems.Count == 0)
+            {
+                return;
+            }
+            Printer printer1 = new Printer(ipTextBox.Text, "lp", username);
+            foreach (ListViewItem s in this.listView1.SelectedItems)
+            {
+                printer1.LPRM((string)s.Tag);
+                notifyIcon1.ShowBalloonTip(2000, "Removed", this.listView1.SelectedItems[0].Text + " (" + this.listView1.SelectedItems[0].Tag + ")", ToolTipIcon.Info);
+            }
         }
     }
 }
