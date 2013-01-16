@@ -225,7 +225,10 @@ namespace MusicDrucker
 
                     ListViewItem item = new ListViewItem();
                     item.Tag = jobid;
-                    item.Text = String.Format("{0,-8} {1,-15} {2}", status, user, title);
+                    int bytes = 0;
+                    Int32.TryParse(size, out bytes);
+
+                    item.Text = String.Format("{0,-8} {1,-15} {2,-5}MB {3}", status, user, ConvertIntToMegabytes(bytes).ToString("0.00"), title);
 
                     item.ImageIndex = 0;
                     Jobs.Add(item);
@@ -263,6 +266,11 @@ namespace MusicDrucker
                 printer1.LPRM((string)s.Tag);
                 notifyIcon1.ShowBalloonTip(2000, "Removed", this.listView1.SelectedItems[0].Text + " (" + this.listView1.SelectedItems[0].Tag + ")", ToolTipIcon.Info);
             }
+        }
+
+        static double ConvertIntToMegabytes(int bytes)
+        {
+            return (bytes / 1024f) / 1024f;
         }
     }
 }
