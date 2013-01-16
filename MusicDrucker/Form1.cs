@@ -227,15 +227,14 @@ namespace MusicDrucker
                     item.Tag = jobid;
                     int bytes = 0;
                     Int32.TryParse(size, out bytes);
-
-                    item.Text = String.Format("{0,-8} {1,-15} {2,-5}MB {3}", status, user, ConvertIntToMegabytes(bytes).ToString("0.00"), title);
-
+                    item.Text = String.Format("{0,-8} {1,-15} {2,-6}MB {3}", status, user, ConvertIntToMegabytes(bytes).ToString("0.00"), title);
                     item.ImageIndex = 0;
                     Jobs.Add(item);
 
                     if (ActiveJob == null || (status == "active" && title != ActiveJob.title)) {
                         notifyIcon1.ShowBalloonTip(2000, "Current Playing", title, ToolTipIcon.Info);
                         ActiveJob = new MusicJob(user, status, details, title, size);
+                        newElement = true;
                     }
                 }
 
