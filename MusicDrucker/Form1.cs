@@ -18,7 +18,8 @@ namespace MusicDrucker
     {
         private string username;
 
-        List<MusicJob> Jobs;
+        List<ListViewItem> Jobs;
+        List<MusicJob> _jobs;
         MusicJob ActiveJob;
 
         public Form1()
@@ -30,7 +31,8 @@ namespace MusicDrucker
                 username = "unknown";
             }
 
-            Jobs = new List<MusicJob>();
+            Jobs = new List<ListViewItem >();
+            _jobs = new List<MusicJob>();
 
             if (ipTextBox.Text != "")
             {
@@ -39,8 +41,7 @@ namespace MusicDrucker
 
             ActiveJob = null;
 
-            dataGridView1.DataSource = Jobs;
-            dataGridView1.Columns["details"].Visible = false;
+            ListView_SizeChanged(listView1, null);
         }
 
         private void printBtn_Click(object sender, EventArgs e)
@@ -130,9 +131,13 @@ namespace MusicDrucker
                 } catch (Exception ex) {
                     backgroundWorker1.ReportProgress(50, ex.Message + "\n" + ex.StackTrace);
                 }
-                Thread.Sleep(4000);
+                Thread.Sleep(2000);
             }
         }
+
+        private bool Resizing = false;
+
+
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -141,22 +146,50 @@ namespace MusicDrucker
 
             if (e.ProgressPercentage == 100)
             {
-                dataGridView1.DataSource = Jobs;
+                //dataGridView1.DataSource = Jobs;
                 //dataGridView1.Update();
-            }
-
-            if (Jobs.Where(a => a.status == "active").Count() > 0)
-            {
-                MusicJob currentJob = Jobs.Where(a => a.status == "active").First();
-                if (ActiveJob == null || (ActiveJob.title != currentJob.title))
+                listView1.Items.Clear();
+                foreach (ListViewItem i in Jobs)
                 {
-                    notifyIcon1.ShowBalloonTip(2000, "Current Playing", currentJob.title, ToolTipIcon.Info);
-                    ActiveJob = currentJob;
+                    listView1.Items.Add(i);
                 }
             }
         }
 
-        private Regex multiLine = new Regex(@"(?<user>[a-zA-Z-\\]+):\s+(?<status>[a-z0-9]+)\s+\[(?<details>[a-z0-9\.\s-]+)\]\s+(?<title>[a-zA-Z0-9-_\s\\\.\(\)/\&\']+)\.?.*\s+(?<size>\d+) bytes", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        private void ListView_SizeChanged(object sender, EventArgs e)
+        {
+            // Don't allow overlapping of SizeChanged calls
+            if (!Resizing)
+            {
+                // Set the resizing flag
+                Resizing = true;
+
+                ListView listView = sender as ListView;
+                if (listView != null)
+                {
+                    float totalColumnWidth = 0;
+
+                    // Get the sum of all column tags
+                    for (int i = 0; i < listView.Columns.Count; i++)
+                        totalColumnWidth += Convert.ToInt32(listView.Columns[i].Tag);
+
+                    // Calculate the percentage of space each column should 
+                    // occupy in reference to the other columns and then set the 
+                    // width of the column to that percentage of the visible space.
+                    for (int i = 0; i < listView.Columns.Count; i++)
+                    {
+                        float colPercentage = (Convert.ToInt32(listView.Columns[i].Tag) / totalColumnWidth);
+                        listView.Columns[i].Width = (int)(colPercentage * listView.ClientRectangle.Width);
+                    }
+                }
+            }
+
+            // Clear the resizing flag
+            Resizing = false;
+        }
+
+
+        private Regex multiLine = new Regex(@"(?<user>[a-zA-Z-\\]+):\s+(?<status>[a-z0-9]+)\s+\[(?<details>[a-z0-9\.\s-]+)\]\s+(?<title>[\x20-\x7e]+)\.?.*\s+(?<size>\d+) bytes", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
         private Boolean parseLpq()
         {
@@ -180,7 +213,7 @@ namespace MusicDrucker
                     newElement = true;
                 }
 
-                Jobs = new List<MusicJob>();
+                Jobs = new List<ListViewItem>();
                 foreach (Match m in matches)
                 {
                     String user = String.Empty;
@@ -195,17 +228,40 @@ namespace MusicDrucker
                     title = m.Result("${title}").Trim();
                     size = m.Result("${size}").Trim();
 
-                    MusicJob mj = new MusicJob(user, status, details, title, size);
-                    if (Jobs.Where(
-                        a => a.user == mj.user && a.status == mj.status && a.details == mj.details && a.title == mj.title
-                        ).Count() == 0)
-                    {
-                        Jobs.Add(mj);
+                    //
+                    ListViewItem item = new ListViewItem();
+                    item.Tag = this;
+                    item.Text = String.Format("{0,-8} {1} {2}", status, user, title);
+                    ListViewItem.ListViewSubItem subItem = new ListViewItem.ListViewSubItem(item, "Title");
+                    subItem.Name = "Title";
+                    subItem.Text = title;
+                    item.SubItems.Add(subItem);
+                    item.ImageIndex = 0;
+                    Jobs.Add(item);
+
+                    if (ActiveJob == null || (status == "active" && title != ActiveJob.title)) {
+                        notifyIcon1.ShowBalloonTip(2000, "Current Playing", title, ToolTipIcon.Info);
+                        ActiveJob = new MusicJob(user, status, details, title, size);
                     }
                 }
+
             }
 
             return newElement;
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.listView1.SelectedItems.Count == 0)
+            {
+                selectedLbl.Text = "Selected:";
+                return;
+            }
+            selectedLbl.Text = "Selected: " + this.listView1.SelectedItems[0].Text;
+        }
+
+        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
         }
     }
 }
