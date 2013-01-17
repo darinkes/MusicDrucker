@@ -153,6 +153,15 @@ namespace MusicDrucker
                 {
                     listView1.Items.Add(i);
                 }
+
+                if (ActiveJob != null)
+                {
+                    scrollingLbl.Text = ActiveJob.title;
+                }
+                else
+                {
+                    scrollingLbl.Text = "";
+                }
             }
         }
 
@@ -214,6 +223,7 @@ namespace MusicDrucker
                 }
 
                 Jobs = new List<ListViewItem>();
+                _jobs = new List<MusicJob>();
                 foreach (Match m in matches)
                 {
                     String user = m.Result("${user}").Trim();
@@ -230,14 +240,25 @@ namespace MusicDrucker
                     item.Text = String.Format("{0,-8} {1,-15} {2,-6}MB {3}", status, user, ConvertIntToMegabytes(bytes).ToString("0.00"), title);
                     item.ImageIndex = 0;
                     Jobs.Add(item);
-
-                    if (ActiveJob == null || (status == "active" && title != ActiveJob.title)) {
-                        notifyIcon1.ShowBalloonTip(2000, "Current Playing", title, ToolTipIcon.Info);
-                        ActiveJob = new MusicJob(user, status, details, title, size);
-                        newElement = true;
-                    }
+                    _jobs.Add(new MusicJob(user, status, details, title, size));
                 }
 
+            }
+
+            List<MusicJob> activeJobs = _jobs.Where(a => a.status == "active").ToList<MusicJob>();
+
+            if (activeJobs.Count() > 0)
+            {
+                if (ActiveJob == null || activeJobs.First().title != ActiveJob.title)
+                {
+                    notifyIcon1.ShowBalloonTip(2000, "Current Playing", activeJobs.First().title, ToolTipIcon.Info);
+                    ActiveJob = activeJobs.First();
+                    newElement = true;
+                }
+            }
+            else
+            {
+                ActiveJob = null;
             }
 
             return newElement;

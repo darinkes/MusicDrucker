@@ -50,6 +50,8 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.selectedLbl = new System.Windows.Forms.ToolStripStatusLabel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.scrollingLbl = new MusicDrucker.DougScrollingTextCtrl();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -63,7 +65,7 @@
             this.printBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.printBtn.BackColor = System.Drawing.Color.Transparent;
             this.printBtn.ForeColor = System.Drawing.Color.Black;
-            this.printBtn.Location = new System.Drawing.Point(161, 337);
+            this.printBtn.Location = new System.Drawing.Point(161, 436);
             this.printBtn.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.printBtn.Name = "printBtn";
             this.printBtn.Size = new System.Drawing.Size(112, 20);
@@ -95,7 +97,7 @@
             // 
             this.aboutBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.aboutBtn.ForeColor = System.Drawing.Color.Black;
-            this.aboutBtn.Location = new System.Drawing.Point(161, 361);
+            this.aboutBtn.Location = new System.Drawing.Point(161, 460);
             this.aboutBtn.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.aboutBtn.Name = "aboutBtn";
             this.aboutBtn.Size = new System.Drawing.Size(112, 20);
@@ -108,7 +110,7 @@
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Image = global::MusicDrucker.Properties.Resources.music_png;
-            this.pictureBox1.Location = new System.Drawing.Point(4, 2);
+            this.pictureBox1.Location = new System.Drawing.Point(4, 101);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(269, 242);
@@ -156,7 +158,7 @@
             this.groupBox1.Controls.Add(this.ipTextBox);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.lastUpdate);
-            this.groupBox1.Location = new System.Drawing.Point(4, 248);
+            this.groupBox1.Location = new System.Drawing.Point(4, 347);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 2, 4, 2);
@@ -185,6 +187,8 @@
             // 
             // flowLayoutPanel1
             // 
+            this.flowLayoutPanel1.Controls.Add(this.scrollingLbl);
+            this.flowLayoutPanel1.Controls.Add(this.label2);
             this.flowLayoutPanel1.Controls.Add(this.pictureBox1);
             this.flowLayoutPanel1.Controls.Add(this.groupBox1);
             this.flowLayoutPanel1.Controls.Add(this.printBtn);
@@ -268,6 +272,28 @@
             this.selectedLbl.Size = new System.Drawing.Size(54, 17);
             this.selectedLbl.Text = "Selected:";
             // 
+            // label2
+            // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(34, 68);
+            this.label2.Margin = new System.Windows.Forms.Padding(3, 20, 3, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(209, 11);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Brought to you by srinkes@";
+            // 
+            // scrollingLbl
+            // 
+            this.scrollingLbl.DougScrollingTextColor1 = System.Drawing.Color.Cyan;
+            this.scrollingLbl.DougScrollingTextColor2 = System.Drawing.Color.Gold;
+            this.scrollingLbl.Font = new System.Drawing.Font("NI7SEG", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.scrollingLbl.Location = new System.Drawing.Point(3, 15);
+            this.scrollingLbl.Margin = new System.Windows.Forms.Padding(3, 15, 3, 15);
+            this.scrollingLbl.Name = "scrollingLbl";
+            this.scrollingLbl.Size = new System.Drawing.Size(269, 18);
+            this.scrollingLbl.TabIndex = 12;
+            // 
             // Form1
             // 
             this.AllowDrop = true;
@@ -292,6 +318,7 @@
             this.groupBox1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
@@ -322,6 +349,8 @@
         private System.Windows.Forms.ToolStripStatusLabel selectedLbl;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
+        private MusicDrucker.DougScrollingTextCtrl scrollingLbl;
+        private System.Windows.Forms.Label label2;
     }
 }
 
