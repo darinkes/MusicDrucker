@@ -16,11 +16,26 @@ namespace MusicDrucker
 {
     public partial class Form1 : Form
     {
+        private Regex gangnamRegex = new Regex(@"gangnam", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private Regex dubstepRegex = new Regex(@"dubstep", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private Regex maybeRegex = new Regex(@"call\s+me\s+maybe", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private Regex multiLine = new Regex(@"(?<user>[a-zA-Z-\\]+):\s+(?<status>[a-z0-9]+)\s+\[job\s+(?<jobid>[0-9]+)(?<details>[a-z0-9\.\s-]+)\]\s+(?<title>[\x20-\x7e]+)\.?.*\s+(?<size>\d+) bytes", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
         private string username;
 
         List<ListViewItem> Jobs;
         List<MusicJob> _jobs;
         MusicJob ActiveJob;
+
+        // a struct containing important information about the state to restore to
+        struct clientRect
+        {
+            public Point location;
+            public int width;
+            public int height;
+        };
+        // this should be in the scope your class
+        clientRect restore;
+        bool fullscreen = false;
 
         public Form1()
         {
@@ -42,6 +57,9 @@ namespace MusicDrucker
             ActiveJob = null;
 
             ListView_SizeChanged(listView1, null);
+
+            this.Select();
+            this.Focus();
         }
 
         private void printBtn_Click(object sender, EventArgs e)
@@ -56,6 +74,8 @@ namespace MusicDrucker
             {
                 Printer printer1 = new Printer(ipTextBox.Text, "lp", username);
                 string fname = openFileDialog1.FileName;
+                if (!checkFilename(fname))
+                    return;
                 printer1.LPR(fname, false);
                 if (!printer1.ErrorMsg.Equals(""))
                 {
@@ -77,11 +97,41 @@ namespace MusicDrucker
             StringCollection sc = new StringCollection();
             foreach (string f in files)
             {
+                if (!checkFilename(f))
+                    continue;
                 sc.Add(f);    
             }
+            if (sc.Count == 0)
+                return;
             Queueing q = new Queueing(ipTextBox.Text, sc, notifyIcon1, username);
             q.ShowDialog();
 
+        }
+
+        private Boolean checkFilename(string filename)
+        {
+            Boolean play = true;
+            if (gangnamRegex.Match(filename).Success)
+            {
+                RandomWarning r = new RandomWarning("gangnam");
+                r.ShowDialog();
+                play = false;
+            }
+            /*
+            if (dubstepRegex.Match(filename).Success)
+            {
+                RandomWarning r = new RandomWarning("dubstep");
+                r.ShowDialog();
+                play = false;
+            }
+             */
+            if (maybeRegex.Match(filename).Success)
+            {
+                RandomWarning r = new RandomWarning("maybe");
+                r.ShowDialog();
+                play = false;
+            }
+            return play;
         }
 
         private void Form1_DragEnter(object sender, DragEventArgs e)
@@ -197,9 +247,6 @@ namespace MusicDrucker
             Resizing = false;
         }
 
-
-        private Regex multiLine = new Regex(@"(?<user>[a-zA-Z-\\]+):\s+(?<status>[a-z0-9]+)\s+\[job\s+(?<jobid>[0-9]+)(?<details>[a-z0-9\.\s-]+)\]\s+(?<title>[\x20-\x7e]+)\.?.*\s+(?<size>\d+) bytes", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
         private Boolean parseLpq()
         {
             Printer printer1 = new Printer(ipTextBox.Text, "lp", username);
@@ -251,7 +298,7 @@ namespace MusicDrucker
             {
                 if (ActiveJob == null || activeJobs.First().title != ActiveJob.title)
                 {
-                    notifyIcon1.ShowBalloonTip(2000, "Current Playing", activeJobs.First().title, ToolTipIcon.Info);
+                    notifyIcon1.ShowBalloonTip(2000, "Currently Playing", activeJobs.First().title, ToolTipIcon.Info);
                     ActiveJob = activeJobs.First();
                     newElement = true;
                 }
@@ -260,7 +307,6 @@ namespace MusicDrucker
             {
                 ActiveJob = null;
             }
-
             return newElement;
         }
 
@@ -284,13 +330,68 @@ namespace MusicDrucker
             foreach (ListViewItem s in this.listView1.SelectedItems)
             {
                 printer1.LPRM((string)s.Tag);
-                notifyIcon1.ShowBalloonTip(2000, "Removed", this.listView1.SelectedItems[0].Text + " (" + this.listView1.SelectedItems[0].Tag + ")", ToolTipIcon.Info);
+                notifyIcon1.ShowBalloonTip(2000, "Removed", s.Text + " (" + s.Tag + ")", ToolTipIcon.Info);
             }
         }
 
         static double ConvertIntToMegabytes(int bytes)
         {
             return (bytes / 1024f) / 1024f;
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            e.Handled = true;
+            if (e.KeyCode == Keys.F11)
+            {
+                if (fullscreen == false)
+                {
+                    this.restore.location = this.Location;
+                    this.restore.width = this.Width;
+                    this.restore.height = this.Height;
+                    this.TopMost = true;
+                    this.Location = new Point(0, 0);
+                    this.FormBorderStyle = FormBorderStyle.None;
+                    this.Width = Screen.PrimaryScreen.Bounds.Width;
+                    this.Height = Screen.PrimaryScreen.Bounds.Height;
+                    fullscreen = true;
+                }
+                else
+                {
+                    this.TopMost = false;
+                    this.Location = this.restore.location;
+                    this.Width = this.restore.width;
+                    this.Height = this.restore.height;
+                    // these are the two variables you may wish to change, depending
+                    // on the design of your form (WindowState and FormBorderStyle)
+                    this.WindowState = FormWindowState.Normal;
+                    this.FormBorderStyle = FormBorderStyle.Sizable;
+                    fullscreen = false;
+                }
+            }
+
+            if (fullscreen && e.KeyCode == Keys.Escape)
+            {
+                this.TopMost = false;
+                this.Location = this.restore.location;
+                this.Width = this.restore.width;
+                this.Height = this.restore.height;
+                // these are the two variables you may wish to change, depending
+                // on the design of your form (WindowState and FormBorderStyle)
+                this.WindowState = FormWindowState.Normal;
+                this.FormBorderStyle = FormBorderStyle.Sizable;
+                fullscreen = false;
+            }
+
+            if (e.KeyCode == Keys.Delete && listView1.SelectedItems.Count > 0)
+            {
+                Printer printer1 = new Printer(ipTextBox.Text, "lp", username);
+                foreach (ListViewItem s in this.listView1.SelectedItems)
+                {
+                    printer1.LPRM((string)s.Tag);
+                    notifyIcon1.ShowBalloonTip(2000, "Removed", s.Text + " (" + s.Tag + ")", ToolTipIcon.Info);
+                }
+            }
         }
     }
 }

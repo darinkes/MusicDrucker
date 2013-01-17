@@ -63,6 +63,16 @@ namespace MusicDrucker.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _6350984_700b {
+            get {
+                object obj = ResourceManager.GetObject("6350984_700b", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap music {
             get {
                 object obj = ResourceManager.GetObject("music", resourceCulture);
@@ -86,6 +96,16 @@ namespace MusicDrucker.Properties {
         internal static System.Drawing.Bitmap music_png {
             get {
                 object obj = ResourceManager.GetObject("music-png", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap No_call_me_maybe {
+            get {
+                object obj = ResourceManager.GetObject("No_call_me_maybe", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
