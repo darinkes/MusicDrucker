@@ -382,11 +382,12 @@ namespace MusicDrucker
                         this.restore.windowState = this.WindowState;
                         this.restore.formBorderStyle = this.FormBorderStyle;
                     }
-                    this.TopMost = true;
+                    this.WindowState = FormWindowState.Normal; // Hack to get a Maximized Window to fullscreen
                     this.Location = new Point(0, 0);
                     this.FormBorderStyle = FormBorderStyle.None;
                     this.Width = Screen.PrimaryScreen.Bounds.Width;
                     this.Height = Screen.PrimaryScreen.Bounds.Height;
+                    this.TopMost = true;
                     fullscreen = true;
                 }
                 else
@@ -394,9 +395,12 @@ namespace MusicDrucker
                     this.TopMost = false;
                     lock (this.restore)
                     {
-                        this.Location = this.restore.location;
-                        this.Width = this.restore.width;
-                        this.Height = this.restore.height;
+                        if (this.restore.windowState != FormWindowState.Maximized)
+                        {
+                            this.Location = this.restore.location;
+                            this.Width = this.restore.width;
+                            this.Height = this.restore.height;
+                        }
                         this.WindowState = this.restore.windowState;
                         this.FormBorderStyle = this.restore.formBorderStyle;
                     }
@@ -409,9 +413,12 @@ namespace MusicDrucker
                 this.TopMost = false;
                 lock (this.restore)
                 {
-                    this.Location = this.restore.location;
-                    this.Width = this.restore.width;
-                    this.Height = this.restore.height;
+                    if (this.restore.windowState != FormWindowState.Maximized)
+                    {
+                        this.Location = this.restore.location;
+                        this.Width = this.restore.width;
+                        this.Height = this.restore.height;
+                    }
                     this.WindowState = this.restore.windowState;
                     this.FormBorderStyle = this.restore.formBorderStyle;
                 }
