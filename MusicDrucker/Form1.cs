@@ -24,7 +24,8 @@ namespace MusicDrucker
         private List<ListViewItem> Jobs;
         private List<MusicJob> _jobs;
         private MusicJob ActiveJob;
-        private int alwaysUpdateAt = 10;
+        private int alwaysUpdateAt = 30;
+        private int TICK = 4000;
         private int updateCounter = 0;
         private bool Resizing = false;
 
@@ -51,7 +52,9 @@ namespace MusicDrucker
             Jobs = new List<ListViewItem >();
             _jobs = new List<MusicJob>();
 
-            if (ipTextBox.Text != "")
+            ipTextBox.Text = Properties.Settings.Default.SpoolerIp;
+
+            if (Properties.Settings.Default.SpoolerIp != "")
             {
                 backgroundWorker1.RunWorkerAsync();
             }
@@ -66,7 +69,7 @@ namespace MusicDrucker
 
         private void printBtn_Click(object sender, EventArgs e)
         {
-            if ((ipTextBox.Text == ""))
+            if ((Properties.Settings.Default.SpoolerIp == ""))
             {
                 MessageBox.Show("Please fill in host");
                 return;
@@ -74,7 +77,7 @@ namespace MusicDrucker
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                Printer printer1 = new Printer(ipTextBox.Text, "lp", username);
+                Printer printer1 = new Printer(Properties.Settings.Default.SpoolerIp, "lp", username);
                 string fname = openFileDialog1.FileName;
                 if (!checkFilename(fname))
                     return;
@@ -89,7 +92,7 @@ namespace MusicDrucker
 
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
-            if ((ipTextBox.Text == ""))
+            if ((Properties.Settings.Default.SpoolerIp == ""))
             {
                 MessageBox.Show("Please fill in host");
                 return;
@@ -105,7 +108,7 @@ namespace MusicDrucker
             }
             if (sc.Count == 0)
                 return;
-            Queueing q = new Queueing(ipTextBox.Text, sc, notifyIcon1, username);
+            Queueing q = new Queueing(Properties.Settings.Default.SpoolerIp, sc, notifyIcon1, username);
             q.ShowDialog();
 
         }
@@ -190,7 +193,7 @@ namespace MusicDrucker
                 } catch (Exception ex) {
                     backgroundWorker1.ReportProgress(50, ex.Message + "\n" + ex.StackTrace);
                 }
-                Thread.Sleep(2000);
+                Thread.Sleep(TICK);
             }
         }
 
@@ -280,7 +283,7 @@ namespace MusicDrucker
 
         private Boolean parseLpq()
         {
-            Printer printer1 = new Printer(ipTextBox.Text, "lp", username);
+            Printer printer1 = new Printer(Properties.Settings.Default.SpoolerIp, "lp", username);
             if (!printer1.ErrorMsg.Equals(""))
             {
                 notifyIcon1.ShowBalloonTip(2000, "Error while spooling", printer1.ErrorMsg, ToolTipIcon.Error);
@@ -357,7 +360,7 @@ namespace MusicDrucker
             {
                 return;
             }
-            Printer printer1 = new Printer(ipTextBox.Text, "lp", username);
+            Printer printer1 = new Printer(Properties.Settings.Default.SpoolerIp, "lp", username);
             foreach (ListViewItem s in this.listView1.SelectedItems)
             {
                 printer1.LPRM((string)s.Tag);
@@ -416,12 +419,19 @@ namespace MusicDrucker
 
             if (e.KeyCode == Keys.Delete && listView1.SelectedItems.Count > 0)
             {
-                Printer printer1 = new Printer(ipTextBox.Text, "lp", username);
+                Printer printer1 = new Printer(Properties.Settings.Default.SpoolerIp, "lp", username);
                 foreach (ListViewItem s in this.listView1.SelectedItems)
                 {
                     printer1.LPRM((string)s.Tag);
                     notifyIcon1.ShowBalloonTip(2000, "Removed", s.Text + " (" + s.Tag + ")", ToolTipIcon.Info);
                 }
+            }
+
+            if (e.Control && e.KeyCode == Keys.S)
+            {
+                Properties.Settings.Default.SpoolerIp = ipTextBox.Text;
+                Properties.Settings.Default.Save();
+                notifyIcon1.ShowBalloonTip(2000, "Applied Settings", "Settings have been saved and applied", ToolTipIcon.Info);
             }
         }
     }

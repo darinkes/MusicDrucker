@@ -22,5 +22,17 @@ namespace MusicDrucker.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.5.14")]
+        public string SpoolerIp {
+            get {
+                return ((string)(this["SpoolerIp"]));
+            }
+            set {
+                this["SpoolerIp"] = value;
+            }
+        }
     }
 }

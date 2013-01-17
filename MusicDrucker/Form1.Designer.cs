@@ -44,6 +44,11 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
+            this.keyBox = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.listView1 = new System.Windows.Forms.ListView();
             this.Title = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -51,18 +56,14 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.selectedLbl = new System.Windows.Forms.ToolStripStatusLabel();
-            this.keyBox = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.scrollingLbl = new MusicDrucker.DougScrollingTextCtrl();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
+            this.keyBox.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            this.keyBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // printBtn
@@ -218,6 +219,57 @@
             this.label2.TabIndex = 13;
             this.label2.Text = "Brought to you by srinkes@";
             // 
+            // keyBox
+            // 
+            this.keyBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.keyBox.Controls.Add(this.label6);
+            this.keyBox.Controls.Add(this.label5);
+            this.keyBox.Controls.Add(this.label4);
+            this.keyBox.Controls.Add(this.label3);
+            this.keyBox.Location = new System.Drawing.Point(4, 436);
+            this.keyBox.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.keyBox.Name = "keyBox";
+            this.keyBox.Size = new System.Drawing.Size(269, 100);
+            this.keyBox.TabIndex = 14;
+            this.keyBox.TabStop = false;
+            this.keyBox.Text = "Keys";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(8, 77);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(234, 11);
+            this.label6.TabIndex = 3;
+            this.label6.Text = "Ctrl+ s - Save/Apply Settings";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 60);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(184, 11);
+            this.label5.TabIndex = 2;
+            this.label5.Text = "ESC - Leave Fullscreen";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(7, 40);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(193, 11);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "F11 - Fullscreen on/off";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(7, 20);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(235, 11);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "DEL - Remove Selected Song(s)";
+            // 
             // listView1
             // 
             this.listView1.AllowDrop = true;
@@ -289,47 +341,6 @@
             this.selectedLbl.Size = new System.Drawing.Size(54, 17);
             this.selectedLbl.Text = "Selected:";
             // 
-            // keyBox
-            // 
-            this.keyBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.keyBox.Controls.Add(this.label5);
-            this.keyBox.Controls.Add(this.label4);
-            this.keyBox.Controls.Add(this.label3);
-            this.keyBox.Location = new System.Drawing.Point(4, 436);
-            this.keyBox.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.keyBox.Name = "keyBox";
-            this.keyBox.Size = new System.Drawing.Size(269, 100);
-            this.keyBox.TabIndex = 14;
-            this.keyBox.TabStop = false;
-            this.keyBox.Text = "Keys";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 20);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(235, 11);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "DEL - Remove Selected Song(s)";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 40);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(193, 11);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "F11 - Fullscreen on/off";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 60);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(184, 11);
-            this.label5.TabIndex = 2;
-            this.label5.Text = "ESC - Leave Fullscreen";
-            // 
             // scrollingLbl
             // 
             this.scrollingLbl.DougScrollingTextColor1 = System.Drawing.Color.Cyan;
@@ -368,11 +379,11 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
+            this.keyBox.ResumeLayout(false);
+            this.keyBox.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.keyBox.ResumeLayout(false);
-            this.keyBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -406,6 +417,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
     }
 }
 
