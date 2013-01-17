@@ -379,6 +379,8 @@ namespace MusicDrucker
                         this.restore.location = this.Location;
                         this.restore.width = this.Width;
                         this.restore.height = this.Height;
+                        this.restore.windowState = this.WindowState;
+                        this.restore.formBorderStyle = this.FormBorderStyle;
                     }
                     this.TopMost = true;
                     this.Location = new Point(0, 0);
@@ -390,15 +392,13 @@ namespace MusicDrucker
                 else
                 {
                     this.TopMost = false;
-                    // these are the two variables you may wish to change, depending
-                    // on the design of your form (WindowState and FormBorderStyle)
-                    this.WindowState = FormWindowState.Normal;
-                    this.FormBorderStyle = FormBorderStyle.Sizable;
                     lock (this.restore)
                     {
                         this.Location = this.restore.location;
                         this.Width = this.restore.width;
                         this.Height = this.restore.height;
+                        this.WindowState = this.restore.windowState;
+                        this.FormBorderStyle = this.restore.formBorderStyle;
                     }
                     fullscreen = false;
                 }
@@ -407,15 +407,13 @@ namespace MusicDrucker
             if (fullscreen && e.KeyCode == Keys.Escape)
             {
                 this.TopMost = false;
-                // these are the two variables you may wish to change, depending
-                // on the design of your form (WindowState and FormBorderStyle)
-                this.WindowState = FormWindowState.Normal;
-                this.FormBorderStyle = FormBorderStyle.Sizable;
                 lock (this.restore)
                 {
                     this.Location = this.restore.location;
                     this.Width = this.restore.width;
                     this.Height = this.restore.height;
+                    this.WindowState = this.restore.windowState;
+                    this.FormBorderStyle = this.restore.formBorderStyle;
                 }
                 fullscreen = false;
             }
@@ -444,5 +442,7 @@ namespace MusicDrucker
         public Point location;
         public int width;
         public int height;
+        public FormWindowState windowState;
+        public FormBorderStyle formBorderStyle;
     }
 }
