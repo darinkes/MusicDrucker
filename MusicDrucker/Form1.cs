@@ -29,6 +29,7 @@ namespace MusicDrucker
         private int TICK = 4000;
         private int updateCounter = 0;
         private bool Resizing = false;
+        private Thread workerThread = null;
 
         clientRect restore;
         bool fullscreen = false;
@@ -357,6 +358,18 @@ namespace MusicDrucker
             {
                 return;
             }
+
+            if (workerThread != null && workerThread.IsAlive)
+            {
+                notifyIcon1.ShowBalloonTip(2000, "Already running", "Removing of tracks is already running", ToolTipIcon.Warning);
+                return;
+            }
+            workerThread = new Thread(removeTracks);
+            workerThread.Start();
+        }
+
+        private void removeTracks()
+        {
             Printer printer1 = new Printer(Properties.Settings.Default.SpoolerIp, "lp", username);
             foreach (ListViewItem s in this.listView1.SelectedItems)
             {
@@ -398,14 +411,14 @@ namespace MusicDrucker
                     this.TopMost = false;
                     lock (this.restore)
                     {
-                        if (this.restore.windowState != FormWindowState.Maximized)
-                        {
-                            this.Location = this.restore.location;
-                            this.Width = this.restore.width;
-                            this.Height = this.restore.height;
-                        }
                         this.WindowState = this.restore.windowState;
                         this.FormBorderStyle = this.restore.formBorderStyle;
+                        if (this.restore.windowState != FormWindowState.Maximized)
+                        {
+                            this.Width = this.restore.width;
+                            this.Height = this.restore.height;
+                            this.Location = this.restore.location;
+                        }
                     }
                     fullscreen = false;
                 }
@@ -416,14 +429,14 @@ namespace MusicDrucker
                 this.TopMost = false;
                 lock (this.restore)
                 {
-                    if (this.restore.windowState != FormWindowState.Maximized)
-                    {
-                        this.Location = this.restore.location;
-                        this.Width = this.restore.width;
-                        this.Height = this.restore.height;
-                    }
                     this.WindowState = this.restore.windowState;
                     this.FormBorderStyle = this.restore.formBorderStyle;
+                    if (this.restore.windowState != FormWindowState.Maximized)
+                    {
+                        this.Width = this.restore.width;
+                        this.Height = this.restore.height;
+                        this.Location = this.restore.location;
+                    }
                 }
                 fullscreen = false;
             }
