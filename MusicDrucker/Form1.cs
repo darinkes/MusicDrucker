@@ -29,14 +29,6 @@ namespace MusicDrucker
         private int updateCounter = 0;
         private bool Resizing = false;
 
-        // a struct containing important information about the state to restore to
-        struct clientRect
-        {
-            public Point location;
-            public int width;
-            public int height;
-        };
-        // this should be in the scope your class
         clientRect restore;
         bool fullscreen = false;
 
@@ -62,6 +54,8 @@ namespace MusicDrucker
             ActiveJob = null;
 
             ListView_SizeChanged(listView1, null);
+
+            restore = new clientRect();
 
             this.Select();
             this.Focus();
@@ -380,9 +374,12 @@ namespace MusicDrucker
             {
                 if (fullscreen == false)
                 {
-                    this.restore.location = this.Location;
-                    this.restore.width = this.Width;
-                    this.restore.height = this.Height;
+                    lock (this.restore)
+                    {
+                        this.restore.location = this.Location;
+                        this.restore.width = this.Width;
+                        this.restore.height = this.Height;
+                    }
                     this.TopMost = true;
                     this.Location = new Point(0, 0);
                     this.FormBorderStyle = FormBorderStyle.None;
@@ -393,13 +390,16 @@ namespace MusicDrucker
                 else
                 {
                     this.TopMost = false;
-                    this.Location = this.restore.location;
-                    this.Width = this.restore.width;
-                    this.Height = this.restore.height;
                     // these are the two variables you may wish to change, depending
                     // on the design of your form (WindowState and FormBorderStyle)
                     this.WindowState = FormWindowState.Normal;
                     this.FormBorderStyle = FormBorderStyle.Sizable;
+                    lock (this.restore)
+                    {
+                        this.Location = this.restore.location;
+                        this.Width = this.restore.width;
+                        this.Height = this.restore.height;
+                    }
                     fullscreen = false;
                 }
             }
@@ -407,13 +407,16 @@ namespace MusicDrucker
             if (fullscreen && e.KeyCode == Keys.Escape)
             {
                 this.TopMost = false;
-                this.Location = this.restore.location;
-                this.Width = this.restore.width;
-                this.Height = this.restore.height;
                 // these are the two variables you may wish to change, depending
                 // on the design of your form (WindowState and FormBorderStyle)
                 this.WindowState = FormWindowState.Normal;
                 this.FormBorderStyle = FormBorderStyle.Sizable;
+                lock (this.restore)
+                {
+                    this.Location = this.restore.location;
+                    this.Width = this.restore.width;
+                    this.Height = this.restore.height;
+                }
                 fullscreen = false;
             }
 
@@ -434,5 +437,12 @@ namespace MusicDrucker
                 notifyIcon1.ShowBalloonTip(2000, "Applied Settings", "Settings have been saved and applied", ToolTipIcon.Info);
             }
         }
+    }
+
+    public class clientRect
+    {
+        public Point location;
+        public int width;
+        public int height;
     }
 }

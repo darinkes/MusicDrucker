@@ -63,9 +63,19 @@ namespace MusicDrucker.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _6350984_700b {
+        internal static System.Drawing.Bitmap gangnam {
             get {
-                object obj = ResourceManager.GetObject("6350984_700b", resourceCulture);
+                object obj = ResourceManager.GetObject("gangnam", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap hipsterprinter {
+            get {
+                object obj = ResourceManager.GetObject("hipsterprinter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,19 +93,9 @@ namespace MusicDrucker.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap music_fails_hipster_printer1 {
+        internal static System.Drawing.Bitmap musicpic {
             get {
-                object obj = ResourceManager.GetObject("music-fails-hipster-printer1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap music_png {
-            get {
-                object obj = ResourceManager.GetObject("music-png", resourceCulture);
+                object obj = ResourceManager.GetObject("musicpic", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -121,10 +121,12 @@
     <None Include="Resources\music-png.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="music.ico" />
     <None Include="Resources\No_call_me_maybe.jpg" />
     <None Include="Resources\6350984_700b.jpg" />
     <None Include="Resources\music-fails-hipster-printer1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="music.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

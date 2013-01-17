@@ -115,7 +115,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Image = global::MusicDrucker.Properties.Resources.music_png;
+            this.pictureBox1.Image = global::MusicDrucker.Properties.Resources.musicpic;
             this.pictureBox1.Location = new System.Drawing.Point(4, 101);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.pictureBox1.Name = "pictureBox1";

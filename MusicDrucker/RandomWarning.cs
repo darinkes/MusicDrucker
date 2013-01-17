@@ -18,7 +18,7 @@ namespace MusicDrucker
             switch (type)
             {
                 case "gangnam":
-                    pictureBox1.Image = global::MusicDrucker.Properties.Resources._6350984_700b;
+                    pictureBox1.Image = global::MusicDrucker.Properties.Resources.gangnam;
                     Text = "NO GANGNAM STYLE!!!";
                     break;
                 case "maybe":
