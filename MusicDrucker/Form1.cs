@@ -24,6 +24,7 @@ namespace MusicDrucker
         private List<ListViewItem> Jobs;
         private List<MusicJob> _jobs;
         private MusicJob ActiveJob;
+        private MusicJob OldActiveJob;
         private int alwaysUpdateAt = 30;
         private int TICK = 4000;
         private int updateCounter = 0;
@@ -52,6 +53,7 @@ namespace MusicDrucker
             }
 
             ActiveJob = null;
+            OldActiveJob = new MusicJob("", "", "", "", "");
 
             ListView_SizeChanged(listView1, null);
 
@@ -232,13 +234,14 @@ namespace MusicDrucker
                 /*
                  * Update ScrollText
                  */
-                if (ActiveJob != null)
-                {
-                    scrollingLbl.Text = ActiveJob.title;
-                }
-                else
+                if (ActiveJob == null)
                 {
                     scrollingLbl.Text = "";
+                }
+                else if (ActiveJob.title != OldActiveJob.title)
+                {
+                    scrollingLbl.Text = ActiveJob.title;
+                    OldActiveJob = ActiveJob;
                 }
             }
         }
