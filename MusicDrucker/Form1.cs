@@ -21,10 +21,12 @@ namespace MusicDrucker
         private Regex maybeRegex = new Regex(@"call\s+me\s+maybe", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private Regex multiLine = new Regex(@"(?<user>[a-zA-Z-\\]+):\s+(?<status>[a-z0-9]+)\s+\[job\s+(?<jobid>[0-9]+)(?<details>[a-z0-9\.\s-]+)\]\s+(?<title>[\x20-\x7e]+)\.?.*\s+(?<size>\d+) bytes", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
         private string username;
-
-        List<ListViewItem> Jobs;
-        List<MusicJob> _jobs;
-        MusicJob ActiveJob;
+        private List<ListViewItem> Jobs;
+        private List<MusicJob> _jobs;
+        private MusicJob ActiveJob;
+        private int alwaysUpdateAt = 10;
+        private int updateCounter = 0;
+        private bool Resizing = false;
 
         // a struct containing important information about the state to restore to
         struct clientRect
@@ -172,10 +174,17 @@ namespace MusicDrucker
                     run = false;
                     break;
                 }
+
+                updateCounter++;
                 try
                 {
                     if (parseLpq())
                         backgroundWorker1.ReportProgress(100);
+                    else if (updateCounter >= alwaysUpdateAt)
+                    {
+                        backgroundWorker1.ReportProgress(100);
+                        updateCounter = 0;
+                    }
                     else
                         backgroundWorker1.ReportProgress(50);
                 } catch (Exception ex) {
@@ -185,10 +194,6 @@ namespace MusicDrucker
             }
         }
 
-        private bool Resizing = false;
-
-
-
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             lastUpdate.Text = "Last Update: " + System.DateTime.Now.ToString();
@@ -196,14 +201,40 @@ namespace MusicDrucker
 
             if (e.ProgressPercentage == 100)
             {
-                //dataGridView1.DataSource = Jobs;
-                //dataGridView1.Update();
+                /*
+                 * Save selected items for restore
+                 */
+                List <ListViewItem> _selected = new List<ListViewItem>();
+                foreach (ListViewItem i in listView1.SelectedItems)
+                {
+                    _selected.Add(i);
+                }
+                /*
+                 * Update the list
+                 */
                 listView1.Items.Clear();
                 foreach (ListViewItem i in Jobs)
                 {
                     listView1.Items.Add(i);
                 }
 
+                /*
+                 * Restore selected items
+                 */
+                foreach (ListViewItem lvi in _selected)
+                {
+                    foreach (ListViewItem i in listView1.Items)
+                    {
+                        if ((string)lvi.Tag == (string)i.Tag)
+                        {
+                            i.Selected = true;
+                        }
+                    }
+                }
+
+                /*
+                 * Update ScrollText
+                 */
                 if (ActiveJob != null)
                 {
                     scrollingLbl.Text = ActiveJob.title;
